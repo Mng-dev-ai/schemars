@@ -1,0 +1,33 @@
+[package]
+name = "schemars"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "schemars"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = "0.20.0"
+mimalloc = { version = "0.1.34"}
+speedate = "0.13.0"
+rust_decimal = "1.32.0"
+
+[features]
+extension-module = ["pyo3/extension-module"]
+
+[profile.release]
+codegen-units = 1
+debug = false
+incremental = false
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true
+
+[dev-dependencies]
+pyo3 = { version = "0.20.0", features = ["auto-initialize"] }
+
+[build-dependencies]
+version_check = "0.9.4"
+pyo3-build-config = { version = "0.20.0" }

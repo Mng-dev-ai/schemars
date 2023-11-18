@@ -1,0 +1,20 @@
+[build-system]
+requires = ["maturin>=1.1,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "schemars"
+requires-python = ">=3.7"
+authors = [
+    { name = "Michael Gendy", email = "nagymichel13@gmail.com" },
+]
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+module-name = "schemars._schemars"
+bindings = "pyo3"
