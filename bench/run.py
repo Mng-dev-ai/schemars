@@ -6,7 +6,6 @@ import string
 import _drf
 import _marshmallow
 import _schemars
-import _pydantic
 
 
 def random_string(length=5):
@@ -52,9 +51,7 @@ instances = [
 marshmallow_schema = _marshmallow.OuterSchema()
 start_time = time.time()
 serialized_data = marshmallow_schema.dump(instances, many=True)
-print(
-    f"--- Marshmallow Serialization took {time.time() - start_time} seconds ---"
-)
+print(f"--- Marshmallow Serialization took {time.time() - start_time} seconds ---")
 
 serializer = _drf.OuterSerializer(instances, many=True)
 start_time = time.time()
@@ -64,6 +61,4 @@ print(f"--- Drf Serialization took {time.time() - start_time} seconds ---")
 schemars_schema = _schemars.OuterSchema()
 start_time = time.time()
 serialized_data = [schemars_schema.serialize(instance) for instance in instances]
-print(
-    f"--- Schemars Serialization took {time.time() - start_time} seconds ---"
-)
+print(f"--- Schemars Serialization took {time.time() - start_time} seconds ---")
