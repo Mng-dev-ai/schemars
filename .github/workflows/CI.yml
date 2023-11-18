@@ -70,6 +70,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Create and activate virtual environment
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
