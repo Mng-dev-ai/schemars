@@ -14,16 +14,12 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10"]
-        target: [x86_64, x86, aarch64]
+        target: [x86_64, x86, aarch64, armv7, s390x, ppc64le]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install System Dependencies
-        run: |
-            sudo apt-get update
-            sudo apt-get install -y build-essential libssl-dev
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
