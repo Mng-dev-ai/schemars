@@ -30,7 +30,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v3
         with:
-          name: wheels-${{ matrix.python-version }}-${{ matrix.target }}
+          name: dist
           path: dist
 
   windows:
@@ -54,7 +54,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v3
         with:
-          name: wheels-${{ matrix.python-version }}-${{ matrix.target }}
+          name: dist
           path: dist
 
   macos:
@@ -77,7 +77,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v3
         with:
-          name: wheels-${{ matrix.python-version }}-${{ matrix.target }}
+          name: dist
           path: dist
 
   sdist:
