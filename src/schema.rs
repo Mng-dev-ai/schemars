@@ -4,7 +4,7 @@ use crate::fields::base::Field;
 use crate::fields::base::FieldTrait;
 use pyo3::intern;
 use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyList};
+use pyo3::types::PyDict;
 use std::collections::HashMap;
 
 #[pyclass(subclass)]
@@ -86,15 +86,20 @@ impl_py_methods!(Schema, required, { fields: HashMap<String, Field>, context: Ha
         }
 
         if let Some(true) = many {
-            let pylist = instance.downcast::<PyList>()?;
-            let mut results: Vec<PyObject> = Vec::with_capacity(pylist.len());
-            for inst in pylist.iter() {
-                let serialized = self.serialize_one(py, inst, parent.clone())?;
-                results.push(serialized);
+            if let Ok(iter) = instance.iter() {
+                let mut results: Vec<PyObject> = Vec::new();
+                for inst in iter {
+                    let serialized = self.serialize_one(py, inst?, parent.clone())?;
+                    results.push(serialized);
+                }
+                return Ok(results.into_py(py));
+            } else {
+                return Err(
+                    pyo3::exceptions::PyTypeError::new_err("Expected an iterable"),
+                );
             }
-            return Ok(results.into_py(py));
         }
-        self.serialize_one(py, instance, parent.clone())
+            self.serialize_one(py, instance, parent.clone())
     }
     fn serialize_one(
         &self,
