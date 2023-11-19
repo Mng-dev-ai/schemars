@@ -153,4 +153,7 @@ impl FieldTrait for Schema {
     fn is_method_field(&self) -> bool {
         self.base.is_method_field
     }
+    fn call(&self) -> bool {
+        self.base.call
+    }
 }
