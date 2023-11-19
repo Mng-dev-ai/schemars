@@ -76,10 +76,15 @@ impl_py_methods!(Schema, required, { fields: HashMap<String, Field>, context: Ha
         many: Option<bool>,
         parent: Option<PyObject>,
     ) -> PyResult<PyObject> {
+        if instance.is_none() {
+            return Ok(py.None());
+        }
+
         if let Some(callback) = &self.base.serialize_func {
             let result = callback.call1(py, (instance,))?;
             return Ok(result);
         }
+
         if let Some(true) = many {
             let pylist = instance.downcast::<PyList>()?;
             let mut results: Vec<PyObject> = Vec::with_capacity(pylist.len());

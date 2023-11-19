@@ -40,6 +40,7 @@ class Schema(RustSchema):
             strict=kwargs.get("strict", False),
             default=kwargs.get("default", None),
             source=kwargs.get("source", None),
+            call=kwargs.get("call", False),
             serialize_func=kwargs.get("serialize_func", None),
             context=kwargs.get("context", {}),
         )
@@ -60,6 +61,7 @@ class Schema(RustSchema):
         self.source = kwargs.get("source", None)
         self.write_only = kwargs.get("write_only", False)
         self.strict = kwargs.get("strict", False)
+        self.call = kwargs.get("call", False)
         self.default = kwargs.get("default", None)
         self.serialize_func = kwargs.get("serialize_func", None)
         self.context = kwargs.get("context", {})
