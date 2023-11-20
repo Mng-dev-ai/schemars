@@ -7,7 +7,7 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use std::collections::HashMap;
 
-#[pyclass(subclass)]
+#[pyclass(subclass, dict)]
 #[derive(Clone)]
 pub struct Schema {
     fields: HashMap<String, Field>,
