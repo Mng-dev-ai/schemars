@@ -1,3 +1,4 @@
 schemars
 marshmallow
 djangorestframework
+pydantic

@@ -50,7 +50,7 @@ If you're already using Marshmallow or Django REST Framework, you'll find Schema
 # Benchmarking Schemars
 
 ## Quick Benchmark Setup
-To compare Schemars with Django REST Framework (DRF) and Marshmallow, follow these steps:
+To compare Schemars with Django REST Framework (DRF), Marshmallow and Pydantic, follow these steps:
 
 ### Installation
 Install benchmarking requirements:
@@ -64,6 +64,6 @@ Execute the benchmark script:
 python3 bench/run.py
 ```
 
-This will run serialization tasks using Schemars, Marshmallow, and DRF, allowing you to directly compare their performance.
+This will run serialization tasks using Schemars, Marshmallow, DRF and Pydantic, allowing you to directly compare their performance.
 ## License
 Schemars is released under the [MIT License]
