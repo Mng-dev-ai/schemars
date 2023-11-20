@@ -1,0 +1,3 @@
+django
+djangorestframework
+schemars==0.3.0
