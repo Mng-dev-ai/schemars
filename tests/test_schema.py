@@ -1,4 +1,3 @@
-import pytest
 import schemars
 
 
@@ -187,22 +186,53 @@ def test_serialize_with_context():
 
     class ProductSchema(schemars.Schema):
         name = schemars.Str()
+        method = schemars.Method()
 
-        def serialize(self, instance, many=None):
-            context_suffix = self.context.get("suffix") if self.context else ""
-            result = super().serialize(instance, many)
-            if not many:
-                result["name"] += context_suffix
-            else:
-                for item in result:
-                    item["name"] += context_suffix
-            return result
+        def get_method(self, obj):
+            return self.context.get("suffix")
 
-    schema = ProductSchema(context={"suffix": " - Context"})
+    schema = ProductSchema(context={"suffix": "test"})
     product = Product("Product 1")
     result = schema.serialize(product)
-    assert result == {"name": "Product 1 - Context"}
+    assert result == {"name": "Product 1", "method": "test"}
 
-    products = [Product("Product 1"), Product("Product 2")]
-    result = schema.serialize(products, many=True)
-    assert result == [{"name": "Product 1 - Context"}, {"name": "Product 2 - Context"}]
+
+def test_serialize_with_inheritance():
+    class Product:
+        def __init__(self, name, display_name, related_products):
+            self.name = name
+            self.display_name = display_name
+            self.related_products = related_products
+
+    class BaseProductSchema(schemars.Schema):
+        name = schemars.Str()
+        display_name = schemars.Str()
+
+    class ProductSchema(BaseProductSchema):
+        related_products = BaseProductSchema(many=True)
+
+    schema = ProductSchema()
+    product = Product("Product 1", "Product 1", [Product("Product 2", "Product 2", [])])
+    result = schema.serialize(product)
+    assert result == {
+        "name": "Product 1",
+        "display_name": "Product 1",
+        "related_products": [{"name": "Product 2", "display_name": "Product 2"}],
+    }
+
+
+def test_serialize_with_custom_attributes():
+    class Product:
+        pass
+
+    class ProductSchema(schemars.Schema):
+        method = schemars.Method()
+
+        def get_method(self, obj):
+            self.test = "test"
+            return self.test
+
+    schema = ProductSchema()
+    product = Product()
+    result = schema.serialize(product)
+    assert result == {"method": "test"}
