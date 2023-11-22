@@ -10,8 +10,8 @@ use std::collections::HashMap;
 #[pyclass(subclass, dict)]
 #[derive(Clone)]
 pub struct Schema {
-    fields: HashMap<String, Field>,
     pub base: BaseField,
+    fields: HashMap<String, Field>,
     #[pyo3(get, set)]
     context: HashMap<String, PyObject>,
 }
@@ -81,13 +81,12 @@ impl_py_methods!(Schema, required, { fields: HashMap<String, Field>, context: Ha
         }
 
         if let Some(callback) = &self.base.serialize_func {
-            let result = callback.call1(py, (instance,))?;
-            return Ok(result);
+            return callback.call1(py, (instance,));
         }
 
-        if let Some(true) = many {
+        if many == Some(true) {
             if let Ok(iter) = instance.iter() {
-                let mut results: Vec<PyObject> = Vec::new();
+                let mut results: Vec<PyObject> = Vec::with_capacity(iter.size_hint().0);
                 for inst in iter {
                     let serialized = self.serialize_one(py, inst?, parent.clone())?;
                     results.push(serialized);
@@ -99,7 +98,7 @@ impl_py_methods!(Schema, required, { fields: HashMap<String, Field>, context: Ha
                 );
             }
         }
-            self.serialize_one(py, instance, parent.clone())
+            self.serialize_one(py, instance, parent)
     }
     fn serialize_one(
         &self,
@@ -113,12 +112,14 @@ impl_py_methods!(Schema, required, { fields: HashMap<String, Field>, context: Ha
             if field.is_write_only(py)? {
                 continue;
             }
+            let instance_ref = instance.into();
+
             if field.is_method_field(py)? {
                 match self.handle_method_field(
                     py,
                     key,
                     field.clone(),
-                    instance.into(),
+                    instance_ref,
                     parent.clone(),
                 ) {
                     Ok(value) => serialized_data.set_item(key, value)?,
@@ -128,17 +129,13 @@ impl_py_methods!(Schema, required, { fields: HashMap<String, Field>, context: Ha
                 }
                 continue;
             }
-            let attr_value = self
-                .get_attr_value(py, instance.into(), field.clone(), key)
-                .and_then(|val| self.serialize_attr_value(py, val, field.clone()))
-                .or_else(|e| {
-                    self.add_error(py, errors, key, e.to_object(py))?;
-                    Err(e)
-                });
-
-            if let Ok(value) = attr_value {
-                serialized_data.set_item(key, value)?;
+            match self.get_attr_value(py, instance_ref, field.clone(), key)
+            .and_then(|val| self.serialize_attr_value(py, val, field.clone())) {
+            Ok(value) => serialized_data.set_item(key, value)?,
+            Err(e) => {
+                self.add_error(py, errors, key, e.to_object(py))?;
             }
+        }
         }
 
         if !errors.is_empty() {

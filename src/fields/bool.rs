@@ -21,28 +21,28 @@ impl_py_methods!(Bool, none, {
             if let Ok(py_str) = value.downcast::<PyString>() {
                 let s: &str = py_str.to_str()?;
                 if TRUTHY.contains(&s) {
-                    return Ok(PyBool::new(py, true).to_object(py));
+                    return Ok(PyBool::new(py, true).into());
                 }
                 if FALSY.contains(&s) {
-                    return Ok(PyBool::new(py, false).to_object(py));
+                    return Ok(PyBool::new(py, false).into());
                 }
             }
             if let Ok(py_long) = value.downcast::<PyLong>() {
                 let i: isize = py_long.extract()?;
                 if i == 1 {
-                    return Ok(PyBool::new(py, true).to_object(py));
+                    return Ok(PyBool::new(py, true).into());
                 }
                 if i == 0 {
-                    return Ok(PyBool::new(py, false).to_object(py));
+                    return Ok(PyBool::new(py, false).into());
                 }
             }
             if let Ok(py_float) = value.downcast::<PyFloat>() {
                 let f: f64 = py_float.extract()?;
                 if f == 1.0 {
-                    return Ok(PyBool::new(py, true).to_object(py));
+                    return Ok(PyBool::new(py, true).into());
                 }
                 if f == 0.0 {
-                    return Ok(PyBool::new(py, false).to_object(py));
+                    return Ok(PyBool::new(py, false).into());
                 }
             }
         }
