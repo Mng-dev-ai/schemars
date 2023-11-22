@@ -32,7 +32,7 @@ impl_py_methods!(Date, optional, { format: Option<String>}, {
             }
         }
         Err(PyErr::new::<ValidationError, _>(generate_error_msg(
-            "Str",
+            "Date",
             value,
         )?))
     }

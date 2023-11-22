@@ -1,17 +1,16 @@
 use crate::errors::generate_error_msg;
 use crate::errors::ValidationError;
-use crate::fields::base::BaseField;
-use pyo3::intern;
+use crate::fields::base::{BaseField, Field};
 use pyo3::prelude::*;
 use pyo3::types::PyList;
 
 #[pyclass(subclass)]
 pub struct List {
     pub base: BaseField,
-    child: Option<PyObject>,
+    child: Option<Field>,
 }
 
-impl_py_methods!(List, optional, { child: Option<PyObject> }, {
+impl_py_methods!(List, optional, { child: Option<Field> }, {
     fn serialize(&self, py: Python, value: &PyAny) -> PyResult<PyObject> {
         let as_list = |v: &PyAny| -> PyResult<_> {
             match v.downcast::<PyList>() {
@@ -34,12 +33,10 @@ impl_py_methods!(List, optional, { child: Option<PyObject> }, {
                 let list = as_list(value)?;
                 let downcasted_list = PyList::empty(py);
                 for item in list.as_ref(py).iter()? {
-                    let py_item = child
-                        .as_ref(py)
-                        .call_method1(intern!(py, "serialize"), (item?,))?;
+                    let py_item = child.serialize(py, item?, None)?;
                     downcasted_list.append(py_item)?;
                 }
-                Ok(downcasted_list.to_object(py))
+                Ok(downcasted_list.into())
             }
             None => as_list(value),
         }
