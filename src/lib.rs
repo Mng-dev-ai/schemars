@@ -19,6 +19,7 @@ fn _schemars(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<fields::datetime::DateTime>()?;
     m.add_class::<fields::dict::Dict>()?;
     m.add_class::<fields::list::List>()?;
+    m.add_class::<fields::uuid::Uuid>()?;
     m.add_class::<fields::union::Union>()?;
     m.add_class::<fields::method::Method>()?;
     m.add_class::<fields::decimal::Decimal>()?;

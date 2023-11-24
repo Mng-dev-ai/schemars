@@ -43,6 +43,8 @@ class List(FieldBase):
         child: Optional[Any] = None,
         **kwargs: Any
     ) -> None: ...
+    
+class Uuid(FieldBase): ...
 
 class Union(FieldBase):
     def __init__(

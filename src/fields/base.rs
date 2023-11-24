@@ -2,7 +2,7 @@ use crate::{
     errors::ValidationError, fields::bool::Bool, fields::bytes::Bytes, fields::date::Date,
     fields::datetime::DateTime, fields::decimal::Decimal, fields::dict::Dict, fields::float::Float,
     fields::int::Int, fields::list::List, fields::method::Method, fields::str::Str,
-    fields::union::Union, schema::Schema,
+    fields::union::Union, fields::uuid::Uuid, schema::Schema,
 };
 use pyo3::prelude::*;
 
@@ -47,6 +47,7 @@ pub enum Field {
     DateTime(Py<DateTime>),
     Dict(Py<Dict>),
     List(Py<List>),
+    Uuid(Py<Uuid>),
     Union(Py<Union>),
     Method(Py<Method>),
     NestedSchema(Py<Schema>, bool),
@@ -69,6 +70,7 @@ impl Field {
             Field::DateTime(field) => f(&*field.as_ref(py).borrow()),
             Field::Dict(field) => f(&*field.as_ref(py).borrow()),
             Field::List(field) => f(&*field.as_ref(py).borrow()),
+            Field::Uuid(field) => f(&*field.as_ref(py).borrow()),
             Field::Union(field) => f(&*field.as_ref(py).borrow()),
             Field::Method(field) => f(&*field.as_ref(py).borrow()),
             Field::NestedSchema(field, _) => f(&*field.as_ref(py).borrow()),
@@ -142,6 +144,8 @@ impl<'source> FromPyObject<'source> for Field {
             Ok(Field::Dict(field))
         } else if let Ok(field) = obj.extract::<Py<List>>() {
             Ok(Field::List(field))
+        } else if let Ok(field) = obj.extract::<Py<Uuid>>() {
+            Ok(Field::Uuid(field))
         } else if let Ok(field) = obj.extract::<Py<Union>>() {
             Ok(Field::Union(field))
         } else if let Ok(field) = obj.extract::<Py<Method>>() {

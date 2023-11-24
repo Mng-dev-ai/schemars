@@ -11,3 +11,4 @@ pub mod list;
 pub mod method;
 pub mod str;
 pub mod union;
+pub mod uuid;
