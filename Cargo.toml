@@ -11,6 +11,7 @@ crate-type = ["cdylib"]
 pyo3 = "0.20.0"
 speedate = "0.13.0"
 rust_decimal = "1.32.0"
+uuid = "1.6.1"
 
 [features]
 extension-module = ["pyo3/extension-module"]
