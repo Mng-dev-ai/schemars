@@ -47,6 +47,7 @@ class Schema(RustSchema):
             call=kwargs.get("call", False),
             serialize_func=kwargs.get("serialize_func", None),
             context=kwargs.get("context", {}),
+            alias=kwargs.get("alias", None),
         )
 
     @classmethod
@@ -69,6 +70,7 @@ class Schema(RustSchema):
         self.default = kwargs.get("default", None)
         self.serialize_func = kwargs.get("serialize_func", None)
         self.context = kwargs.get("context", {})
+        self.alias = kwargs.get("alias", None)
         
     def serialize(self, instance, many=None):
         many = self.many if many is None else many

@@ -33,6 +33,9 @@ pub trait FieldTrait {
     fn is_method_field(&self) -> bool {
         false
     }
+    fn alias(&self) -> Option<String> {
+        None
+    }
 }
 
 #[derive(Clone)]
@@ -121,6 +124,9 @@ impl Field {
     pub fn call(&self, py: Python) -> PyResult<bool> {
         self.with_field_ref(py, |field| Ok(field.call()))
     }
+    pub fn alias(&self, py: Python) -> PyResult<Option<String>> {
+        self.with_field_ref(py, |field| Ok(field.alias()))
+    }
 }
 
 impl<'source> FromPyObject<'source> for Field {
@@ -177,10 +183,13 @@ pub struct BaseField {
     pub source: Option<String>,
     #[pyo3(get, set)]
     pub serialize_func: Option<PyObject>,
+    #[pyo3(get, set)]
+    pub alias: Option<String>,
     pub is_method_field: bool,
 }
 
 impl BaseField {
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         write_only: bool,
         strict: bool,
@@ -188,6 +197,7 @@ impl BaseField {
         default: Option<PyObject>,
         source: Option<String>,
         serialize_func: Option<PyObject>,
+        alias: Option<String>,
         is_method_field: bool,
     ) -> Self {
         BaseField {
@@ -197,6 +207,7 @@ impl BaseField {
             default,
             source,
             serialize_func,
+            alias,
             is_method_field,
         }
     }

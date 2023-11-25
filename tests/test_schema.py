@@ -236,3 +236,16 @@ def test_serialize_with_custom_attributes():
     product = Product()
     result = schema.serialize(product)
     assert result == {"method": "test"}
+
+def test_serialize_with_alias():
+    class Product:
+        def __init__(self):
+            self.name = "Product 1"
+
+    class ProductSchema(schemars.Schema):
+        name = schemars.Str(alias="my_name")
+
+    schema = ProductSchema()
+    product = Product()
+    result = schema.serialize(product)
+    assert result == {"my_name": "Product 1"}

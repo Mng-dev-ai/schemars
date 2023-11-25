@@ -112,6 +112,9 @@ impl_py_methods!(Schema, required, { fields: HashMap<String, Field>, context: Ha
             if field.is_write_only(py)? {
                 continue;
             }
+
+            let alias = field.alias(py)?.unwrap_or(key.to_string());
+
             let instance_ref = instance.into();
 
             if field.is_method_field(py)? {
@@ -122,7 +125,7 @@ impl_py_methods!(Schema, required, { fields: HashMap<String, Field>, context: Ha
                     instance_ref,
                     parent.clone(),
                 ) {
-                    Ok(value) => serialized_data.set_item(key, value)?,
+                    Ok(value) => serialized_data.set_item(alias, value)?,
                     Err(e) => {
                         self.add_error(py, errors, key, e.to_object(py))?;
                     }
@@ -131,7 +134,7 @@ impl_py_methods!(Schema, required, { fields: HashMap<String, Field>, context: Ha
             }
             match self.get_attr_value(py, instance_ref, field.clone(), key)
             .and_then(|val| self.serialize_attr_value(py, val, field.clone())) {
-            Ok(value) => serialized_data.set_item(key, value)?,
+            Ok(value) => serialized_data.set_item(alias, value)?,
             Err(e) => {
                 self.add_error(py, errors, key, e.to_object(py))?;
             }
