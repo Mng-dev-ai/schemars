@@ -1,8 +1,8 @@
 use crate::{
-    errors::ValidationError, fields::bool::Bool, fields::bytes::Bytes, fields::date::Date,
-    fields::datetime::DateTime, fields::decimal::Decimal, fields::dict::Dict, fields::float::Float,
-    fields::int::Int, fields::list::List, fields::method::Method, fields::str::Str,
-    fields::union::Union, fields::uuid::Uuid, schema::Schema,
+    errors::ValidationError, fields::any::Any, fields::bool::Bool, fields::bytes::Bytes,
+    fields::date::Date, fields::datetime::DateTime, fields::decimal::Decimal, fields::dict::Dict,
+    fields::float::Float, fields::int::Int, fields::list::List, fields::method::Method,
+    fields::str::Str, fields::union::Union, fields::uuid::Uuid, schema::Schema,
 };
 use pyo3::prelude::*;
 
@@ -49,6 +49,7 @@ pub enum Field {
     List(Py<List>),
     Uuid(Py<Uuid>),
     Union(Py<Union>),
+    Any(Py<Any>),
     Method(Py<Method>),
     NestedSchema(Py<Schema>, bool),
 }
@@ -72,6 +73,7 @@ impl Field {
             Field::List(field) => f(&*field.as_ref(py).borrow()),
             Field::Uuid(field) => f(&*field.as_ref(py).borrow()),
             Field::Union(field) => f(&*field.as_ref(py).borrow()),
+            Field::Any(field) => f(&*field.as_ref(py).borrow()),
             Field::Method(field) => f(&*field.as_ref(py).borrow()),
             Field::NestedSchema(field, _) => f(&*field.as_ref(py).borrow()),
         }
@@ -148,6 +150,8 @@ impl<'source> FromPyObject<'source> for Field {
             Ok(Field::Uuid(field))
         } else if let Ok(field) = obj.extract::<Py<Union>>() {
             Ok(Field::Union(field))
+        } else if let Ok(field) = obj.extract::<Py<Any>>() {
+            Ok(Field::Any(field))
         } else if let Ok(field) = obj.extract::<Py<Method>>() {
             Ok(Field::Method(field))
         } else if let Ok((field, many)) = obj.extract::<(Py<Schema>, bool)>() {
