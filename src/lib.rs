@@ -21,6 +21,7 @@ fn _schemars(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<fields::list::List>()?;
     m.add_class::<fields::uuid::Uuid>()?;
     m.add_class::<fields::union::Union>()?;
+    m.add_class::<fields::any::Any>()?;
     m.add_class::<fields::method::Method>()?;
     m.add_class::<fields::decimal::Decimal>()?;
     m.add_class::<errors::ValidationError>()?;

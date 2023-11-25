@@ -13,7 +13,8 @@ from schemars._schemars import (
     Method,
     Decimal,
     Bytes,
-    Uuid
+    Uuid,
+    Any,
 )
 
 class Schema(RustSchema):
@@ -30,7 +31,8 @@ class Schema(RustSchema):
         Method,
         Decimal,
         Bytes,
-        Uuid
+        Uuid,
+        Any
     )
 
     def __new__(cls, **kwargs):
