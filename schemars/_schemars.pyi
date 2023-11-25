@@ -9,6 +9,8 @@ class FieldBase:
         default: typing.Optional[typing.Any] = None,
         source: typing.Optional[str] = None,
         serialize_func: typing.Optional[typing.Callable] = None,
+        alias: typing.Optional[str] = None,
+        **kwargs: Any
     ) -> None: ...
 
 class DateFieldBase(FieldBase):

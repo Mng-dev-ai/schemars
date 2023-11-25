@@ -13,7 +13,7 @@ impl Method {
     #[pyo3(signature=(method_name=None))]
     fn new(method_name: Option<String>) -> Self {
         Method {
-            base: BaseField::new(false, false, false, None, None, None, true),
+            base: BaseField::new(false, false, false, None, None, None, None, true),
             method_name,
         }
     }

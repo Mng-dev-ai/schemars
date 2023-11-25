@@ -1,4 +1,3 @@
-import pytest
 import schemars
 
 def test_serialize_valid_any():
