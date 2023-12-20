@@ -1,7 +1,7 @@
 
 # Schemars
 [![PyPI version](https://badge.fury.io/py/schemars.svg)](https://badge.fury.io/py/schemars)
-[![Downloads](https://static.pepy.tech/personalized-badge/schemars?period=month&units=international_system&left_color=black&right_color=brightgreen&left_text=downloads/month)](https://pepy.tech/project/schemars)
+[![Downloads](https://static.pepy.tech/personalized-badge/schemars?period=total&units=international_system&left_color=black&right_color=brightgreen&left_text=Downloads)](https://pepy.tech/project/schemars)
 
 ## Introduction
 Schemars is a Python package, written in Rust and leveraging PyO3, designed for efficient and flexible serialization of Python class instances. It provides a simple yet powerful schema-based approach to serialize complex Python objects.
